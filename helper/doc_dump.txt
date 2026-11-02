@@ -1,0 +1,194 @@
+=== INSPECTING: ESA Term Paper Report – ML-Based Transmission Line Fault Type Classification.docx ===
+
+=== PARAGRAPHS ===
+P000 [Heading 1]: Machine Learning-Based Transmission Line Fault Type Classification for Intelligent Power System Protection
+P001 [normal]: ESA Term Paper Project Report
+P002 [Heading 2]: 1. Introduction
+P003 [Heading 3]: 1.1 Background
+P004 [normal]: Transmission lines carry bulk electrical power over long distances and are exposed to weather, lightning, vegetation, equipment failure, and human error. Faults on these lines (short circuits between phases or to ground) produce large currents and voltage sags that can damage equipment and cause outages if not cleared quickly. Protection systems must therefore detect a fault, identify its type, and isolate the faulted section within a few cycles.
+P005 [normal]: Common transmission line faults are:
+P006 [normal]: Single line-to-ground (LG): A-G, B-G, C-G
+P007 [normal]: Line-to-line (LL): A-B, B-C, A-C
+P008 [normal]: Double line-to-ground (LLG): AB-G, BC-G, AC-G
+P009 [normal]: Three-phase (LLL) and three-phase-to-ground (LLLG)
+P010 [normal]: Conventional distance and overcurrent relays rely on fixed thresholds and impedance settings, which can misoperate under varying fault resistance, fault location, source strength and loading. With digital protection (numerical relays, IEDs), data-driven classifiers can learn fault signatures directly from voltage and current measurements.
+P011 [normal]: [ADD: 1–2 more paragraphs with citations from literature on ML-based fault classification, e.g., ANN, SVM, decision trees, wavelet + ML. Cite 4–6 papers.]
+P012 [Heading 3]: 1.2 Motivation
+P013 [normal]: Faster and more accurate fault-type identification improves relay selectivity and single-pole tripping decisions.
+P014 [normal]: Fault type determines which phases to trip and which reclosing scheme to apply.
+P015 [normal]: ML models can generalize across fault resistance, location, and inception angle better than fixed-threshold logic.
+P016 [normal]: SVMs work well on small-to-medium tabular datasets, handle non-linear boundaries through kernels, and are lightweight enough for a digital relay module.
+P017 [normal]: [ADD: Any personal/academic motivation, relevance to India's grid or course topic.]
+P018 [Heading 3]: 1.3 Problem Statement
+P019 [normal]: Given three-phase voltage and current measurements recorded during a disturbance on a 110 kV transmission line, classify the event into its correct fault type (and the no-fault condition, if present in the dataset) using a Support Vector Machine, and package the trained model as a prototype fault-classification module suitable for a digital protection system.
+P020 [Heading 3]: 1.4 Objectives
+P021 [normal]: Study the fault simulation dataset for 110 kV transmission lines and understand its structure and classes.
+P022 [normal]: Clean and preprocess the data (missing values, scaling, encoding, class balance).
+P023 [normal]: Perform exploratory data analysis to understand class distributions and feature behaviour.
+P024 [normal]: Design, train and tune an SVM classifier (kernel, C, gamma) using a proper train/validation/test strategy.
+P025 [normal]: Evaluate with accuracy, precision, recall, F1-score and confusion matrix.
+P026 [normal]: Develop a prototype fault-classification module (function/script that takes a measurement vector and returns the fault type).
+P027 [normal]: Discuss results, limitations and future scope.
+P028 [Heading 2]: 2. Dataset Description
+P029 [Heading 3]: 2.1 Source
+P030 [normal]: Dataset: Fault Simulation Dataset for 110 kV Transmission Lines, Mendeley Data.
+P031 [normal]: Link: https://data.mendeley.com/datasets/3dvjgvv5bz/2
+P032 [normal]: Authors: Živko Sokolović (dataset); Živko Sokolović and Mileta Žarković.
+P033 [normal]: Year: 2024.
+P034 [normal]: Licence: Creative Commons Attribution 4.0 International (CC BY 4.0).
+P035 [normal]: Simulation Tool: DIgSILENT PowerFactory, automated using Python scripts through the PowerFactory API.
+P036 [normal]: Sampling Rate: Not specified (steady-state load-flow and short-circuit simulation data).
+P037 [normal]: Line Parameters:
+P038 [normal]: Simulation Method: Simulated 110 kV transmission network under normal and fault conditions, including single-phase-to-ground, two-phase and three-phase short circuits. Fault locations varied from 0% to 100% in 5% increments.
+P040 [Heading 3]: 2.2 Features and Labels
+P041 [normal]: [ADD: Table of features after you open the dataset. Suggested format below.]
+P042 [normal]: Total number of samples: [ADD]
+P043 [normal]: Number of features: [ADD]
+P044 [normal]: Number of classes and their names: [ADD]
+P045 [Heading 2]: 3. Data Cleaning and Preprocessing
+P046 [normal]: [ADD: Describe what you actually did and what you found. Use the checklist below.]
+P047 [normal]: Missing values: [ADD: count per column, how handled]
+P048 [normal]: Duplicates: [ADD]
+P049 [normal]: Outliers: [ADD: method used, e.g., IQR, and whether retained. Fault data naturally has large current spikes, so removing them may delete valid fault information.]
+P050 [normal]: Label encoding: [ADD: LabelEncoder or one-hot mapping]
+P051 [normal]: Feature scaling: StandardScaler (mean 0, variance 1) is applied because SVM with an RBF kernel is distance-based and sensitive to feature scale. The scaler is fitted on training data only to avoid data leakage.
+P052 [normal]: Feature engineering (optional): [ADD: e.g., RMS values, sequence components, voltage/current ratios]
+P053 [normal]: Class imbalance handling: [ADD: class_weight='balanced' or resampling, if needed]
+P054 [Heading 2]: 4. Exploratory Data Analysis
+P055 [normal]: [ADD: Insert plots and one or two lines of interpretation under each.]
+P056 [normal]: Class distribution bar chart. [ADD FIGURE 1]
+P057 [normal]: Summary statistics table (mean, std, min, max per feature). [ADD TABLE 1]
+P058 [normal]: Feature distributions / histograms per class. [ADD FIGURE 2]
+P059 [normal]: Correlation heatmap. [ADD FIGURE 3]
+P060 [normal]: Box plots of voltages and currents per fault type. [ADD FIGURE 4]
+P061 [normal]: PCA or t-SNE 2-D scatter coloured by class, to judge class separability. [ADD FIGURE 5]
+P062 [normal]: Observations: [ADD: e.g., which features separate classes best, any overlap between fault types, any imbalance.]
+P063 [Heading 2]: 5. Training, Validation and Testing Strategy
+P064 [normal]: Data split: 70% training, 15% validation, 15% testing (or 80/20 with cross-validation on the training portion), using stratified sampling so every class appears in each split. [ADD: your final choice]
+P065 [normal]: Random seed fixed (random_state = 42) for reproducibility.
+P066 [normal]: Hyperparameter tuning: GridSearchCV with 5-fold stratified cross-validation over kernel (linear, rbf, poly), C and gamma. [ADD: your grid]
+P067 [normal]: The test set is used only once, for the final evaluation of the selected model.
+P068 [normal]: Metrics: accuracy, per-class precision, recall, F1-score, macro-averaged F1, and confusion matrix.
+P069 [Heading 2]: 6. Proposed Method
+P070 [Heading 3]: 6.1 Support Vector Machine
+P071 [normal]: An SVM finds the hyperplane that maximizes the margin between classes. For non-linearly separable data it uses a kernel function to map inputs into a higher-dimensional space. With the RBF kernel, K(x, x') = exp(-gamma * ||x - x'||^2). The parameter C controls the trade-off between a wide margin and misclassification of training points, and gamma controls how far the influence of a single training sample reaches. Multi-class classification is done using the one-vs-one (scikit-learn SVC default) or one-vs-rest strategy.
+P072 [normal]: [ADD: Short mathematical formulation of the SVM objective in your own words, from your course notes or a textbook.]
+P073 [Heading 3]: 6.2 Overall Workflow
+P074 [normal]: [ADD: Block diagram. Suggested blocks: Fault simulation dataset → Data cleaning → Preprocessing and scaling → Train/validation/test split → SVM training with hyperparameter tuning → Model evaluation → Prototype fault-classification module → Relay trip decision. Draw in draw.io, PowerPoint or Google Drawings and insert here.]
+P075 [Heading 3]: 6.3 Prototype Digital Protection Module
+P076 [normal]: The trained SVM and scaler are saved together (joblib). The module accepts a vector of measured voltages and currents and returns the predicted fault type, which a digital relay could use to select the phases to trip. [ADD: describe your function and show a sample input/output.]
+P077 [Heading 2]: 7. Python Implementation
+P078 [normal]: Template code (edit column names to match the dataset). Paste your final working code and notebook screenshots here.
+P079 [normal]: import pandas as pd, numpy as np, joblib
+import matplotlib.pyplot as plt, seaborn as sns
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# 1. Load data
+df = pd.read_csv('fault_data.csv')          # [EDIT file name]
+print(df.shape); print(df.info()); print(df.describe())
+
+# 2. Clean
+df = df.drop_duplicates().dropna()
+LABEL = 'Fault_Type'                          # [EDIT label column]
+X = df.drop(columns=[LABEL]); y = df[LABEL]
+le = LabelEncoder(); y_enc = le.fit_transform(y)
+
+# 3. EDA
+sns.countplot(x=y); plt.title('Class distribution'); plt.show()
+sns.heatmap(X.corr(), cmap='coolwarm'); plt.show()
+
+# 4. Split (70/15/15 stratified)
+X_tr, X_tmp, y_tr, y_tmp = train_test_split(X, y_enc, test_size=0.30, stratify=y_enc, random_state=42)
+X_val, X_te, y_val, y_te = train_test_split(X_tmp, y_tmp, test_size=0.50, stratify=y_tmp, random_state=42)
+
+# 5. Pipeline + tuning
+pipe = Pipeline([('scaler', StandardScaler()), ('svm', SVC())])
+grid = {'svm__kernel': ['linear', 'rbf'],
+        'svm__C': [0.1, 1, 10, 100],
+        'svm__gamma': ['scale', 0.01, 0.1, 1]}
+gs = GridSearchCV(pipe, grid, cv=StratifiedKFold(5, shuffle=True, random_state=42),
+                  scoring='f1_macro', n_jobs=-1)
+gs.fit(X_tr, y_tr)
+print('Best params:', gs.best_params_)
+
+# 6. Validate and test
+best = gs.best_estimator_
+print('Validation acc:', accuracy_score(y_val, best.predict(X_val)))
+y_pred = best.predict(X_te)
+print('Test acc:', accuracy_score(y_te, y_pred))
+print(classification_report(y_te, y_pred, target_names=le.classes_))
+cm = confusion_matrix(y_te, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', xticklabels=le.classes_, yticklabels=le.classes_)
+plt.xlabel('Predicted'); plt.ylabel('Actual'); plt.show()
+
+# 7. Prototype module
+joblib.dump({'model': best, 'encoder': le}, 'fault_classifier.pkl')
+
+def classify_fault(sample):
+    """sample: list/array of features in the same order as training columns"""
+    bundle = joblib.load('fault_classifier.pkl')
+    pred = bundle['model'].predict(np.array(sample).reshape(1, -1))
+    return bundle['encoder'].inverse_transform(pred)[0]
+P083 [Heading 2]: 8. Results and Performance Evaluation
+P084 [normal]: [ADD: Fill in after running the code.]
+P085 [normal]: Classification report table: [ADD TABLE 2]
+P086 [normal]: Confusion matrix: [ADD FIGURE 6]
+P087 [normal]: Hyperparameter effect (accuracy vs C or gamma): [ADD FIGURE 7]
+P088 [normal]: Optional comparison with Random Forest, KNN or ANN as a baseline: [ADD TABLE 3]
+P089 [normal]: Optional: decision-boundary / PCA plot of predictions: [ADD FIGURE 8]
+P090 [Heading 2]: 9. Discussion
+P091 [normal]: [ADD: Interpret your results. Suggested points:]
+P092 [normal]: Which fault classes are classified best and which are confused (for example, LG vs LLG faults with high fault resistance).
+P093 [normal]: Why the RBF (or chosen) kernel performed better.
+P094 [normal]: Effect of scaling and hyperparameters.
+P095 [normal]: Suitability for real-time protection: inference time per sample [ADD: measure with time module].
+P096 [normal]: Limitations: simulated rather than field data, noise and CT/PT errors not included, single voltage level, limited fault locations.
+P097 [normal]: Comparison with conventional distance protection.
+P102 [Heading 2]: 10. Conclusion and Future Scope
+P103 [normal]: [ADD: 1 paragraph summarizing the findings and final accuracy.]
+P104 [normal]: Future scope: add noise and real recorded data, fault location and fault zone prediction, deep learning (CNN/LSTM), wavelet-based features, hardware implementation on an IED or embedded platform.
+P105 [Heading 2]: 11. References
+P106 [normal]: Dataset: Fault Simulation Dataset for 110 kV Transmission Lines, Mendeley Data, https://data.mendeley.com/datasets/3dvjgvv5bz/2
+P107 [normal]: Pedregosa et al., Scikit-learn: Machine Learning in Python, JMLR 12, 2011.
+P108 [normal]: Cortes and Vapnik, Support-Vector Networks, Machine Learning, 20, 1995.
+
+=== TABLES ===
+
+--- TABLE 0 (10 rows x 2 cols) ---
+  Row 00: ['Field', 'Details']
+  Row 01: ['Project No.', '15']
+  Row 02: ['Project Title', 'Machine Learning-Based Transmission Line Fault Type Classification for Intelligent Power System Protection']
+  Row 03: ['Student 1', 'Rishabh Raturi – Roll No. 24EEB0A55']
+  Row 04: ['Student 2', 'Simhadri Yateesh Sai – Roll No. 24EEB0A59']
+  Row 05: ['Course Name & Code', 'Energy System Analytics, EE 1331']
+  Row 06: ['Department', 'Electrical and Electronics Engineering']
+  Row 07: ['Faculty Name', 'Prof Debasmita Panda']
+  Row 08: ['Semester / Academic Year', '5th sem, 2026-2027']
+  Row 09: ['Date of Submission', '15-11-2026']
+
+--- TABLE 1 (6 rows x 6 cols) ---
+  Row 00: ['Line', 'Length (km)', 'R₁ (Ω/km)', 'X₁ (Ω/km)', 'R₀ (Ω/km)', 'X₀ (Ω/km)']
+  Row 01: ['Line 1', '50', '0.19', '0.36', '0.34', '1.58']
+  Row 02: ['Line 2', '50', '0.19', '0.36', '0.34', '1.58']
+  Row 03: ['Line 3', '15', '0.15', '0.40', '0.31', '1.11']
+  Row 04: ['Line 4', '15', '0.15', '0.40', '0.31', '1.11']
+  Row 05: ['Line 5', '25', '0.15', '0.40', '0.31', '1.11']
+
+--- TABLE 2 (5 rows x 4 cols) ---
+  Row 00: ['Feature / Column', 'Description', 'Unit', 'Type']
+  Row 01: ['[ADD e.g., Ia, Ib, Ic]', 'Phase currents', 'A', 'Numeric']
+  Row 02: ['[ADD e.g., Va, Vb, Vc]', 'Phase voltages', 'V or kV', 'Numeric']
+  Row 03: ['[ADD]', '[ADD]', '[ADD]', '[ADD]']
+  Row 04: ['[ADD: label column]', 'Fault type class', '–', 'Categorical']
+
+--- TABLE 3 (6 rows x 2 cols) ---
+  Row 00: ['Item', 'Value']
+  Row 01: ['Best kernel / C / gamma', '[ADD]']
+  Row 02: ['Cross-validation macro F1', '[ADD]']
+  Row 03: ['Validation accuracy', '[ADD]']
+  Row 04: ['Test accuracy', '[ADD]']
+  Row 05: ['Test macro precision/recall / F1', '[ADD]']
