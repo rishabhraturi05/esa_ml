@@ -60,7 +60,7 @@ def main():
     print("         Note: Missing metadata values occur exclusively in normal operation ('no fault').")
     
     # Prune 73 identical static load-flow duplicates
-    df_clean = df_raw.drop_duplicates().copy()
+    df_clean = df_raw.dropna(subset=feature_cols + [LABEL]).drop_duplicates().copy()
     print(f"         Removed {len(df_raw) - len(df_clean)} duplicate static load-flow records.")
     print(f"         Clean dataset size: {len(df_clean)} samples.")
 
