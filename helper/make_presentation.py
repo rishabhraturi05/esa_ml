@@ -322,93 +322,108 @@ def create_deck():
     p2.font.color.rgb = TEXT_DARK
 
     # =============================================================
-    # SLIDE 6: Final Analysis of the Problem (Requirement 4)
+    # SLIDE 6: Final Analysis: How the Model Works (Exactly)
     # =============================================================
     s6 = prs.slides.add_slide(blank_layout)
-    add_header(s6, "Final Analysis of the Problem & Real-Time Viability")
+    add_header(s6, "Final Analysis: How the Protection Model Works (Step-by-Step)", "MODEL INFERENCE ENGINE & RELAY LOGIC")
 
     # 3 Column Cards
     col_w = Inches(3.68)
     col_gap = Inches(0.34)
 
-    # Col 1: Symmetrical Component Physics
-    c1 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.5), col_w, Inches(5.4))
+    # Col 1: Step 1 - Input Sensing & Normalization
+    c1 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.5), col_w, Inches(4.3))
     c1.fill.solid()
     c1.fill.fore_color.rgb = CARD_BG
     c1.line.color.rgb = BORDER_COLOR
-    tb_c1 = s6.shapes.add_textbox(Inches(0.95), Inches(1.65), col_w - Inches(0.3), Inches(5.1))
+    tb_c1 = s6.shapes.add_textbox(Inches(0.95), Inches(1.65), col_w - Inches(0.3), Inches(4.0))
     t1 = tb_c1.text_frame
     t1.word_wrap = True
     p = t1.paragraphs[0]
-    p.text = "1. Symmetrical Components"
+    p.text = "1. Input & Normalization"
     p.font.name = "Calibri"
     p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = NAVY
     p.space_after = Pt(8)
     pts1 = [
-        "Normal Load: Balanced nominal voltages (~63.5 kV), pure positive-sequence current (I₁ > 0, I₂ = 0, I₀ = 0).",
-        "Three-Phase (3PSC): Symmetric voltage collapse on all phases; high I₁; zero negative and zero sequence (I₂ = 0, I₀ = 0).",
-        "Line-to-Line (2PSC): Unequal currents (I_b = -I_c); strong negative sequence (I₂ > 0); no ground return (I₀ = 0).",
-        "Single Line-to-Ground (SPGF): Characterized by massive zero-sequence current return via earth (I₀ = I₁ = I₂)."
+        "Sensor Vector (x): Ingests 24 continuous measurements (9 PT voltages Ua1-Uc3 in kV + 15 CT currents Ia1-Ic5 in kA).",
+        "Z-Score Standardization: Normalizes each input feature using pre-saved training parameters:",
+        "zⱼ = (xⱼ - μⱼ) / σⱼ",
+        "Why it matters: Prevents high voltages (~63.5 kV) from overpowering smaller currents (~0.2 kA), giving equal mathematical weight to all sensors."
     ]
-    for b in pts1:
+    for idx, b in enumerate(pts1):
         p = t1.add_paragraph()
-        p.text = "• " + b
-        p.font.name = "Calibri"
-        p.font.size = Pt(10.5)
-        p.font.color.rgb = TEXT_DARK
-        p.space_after = Pt(5)
+        if idx == 2:
+            p.text = b
+            p.font.name = "Consolas"
+            p.font.size = Pt(11)
+            p.font.bold = True
+            p.font.color.rgb = RGBColor(15, 76, 129)
+        else:
+            p.text = "• " + b
+            p.font.name = "Calibri"
+            p.font.size = Pt(10.5)
+            p.font.color.rgb = TEXT_DARK
+        p.space_after = Pt(4)
 
-    # Col 2: Real-World Relay Challenges
-    c2 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8) + col_w + col_gap, Inches(1.5), col_w, Inches(5.4))
+    # Col 2: Step 2 - SVM Hyperplane Decision Engine
+    c2 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8) + col_w + col_gap, Inches(1.5), col_w, Inches(4.3))
     c2.fill.solid()
     c2.fill.fore_color.rgb = CARD_BG
     c2.line.color.rgb = BORDER_COLOR
-    tb_c2 = s6.shapes.add_textbox(Inches(0.95) + col_w + col_gap, Inches(1.65), col_w - Inches(0.3), Inches(5.1))
+    tb_c2 = s6.shapes.add_textbox(Inches(0.95) + col_w + col_gap, Inches(1.65), col_w - Inches(0.3), Inches(4.0))
     t2 = tb_c2.text_frame
     t2.word_wrap = True
     p = t2.paragraphs[0]
-    p.text = "2. Practical Grid Challenges"
+    p.text = "2. SVM Decision Engine"
     p.font.name = "Calibri"
     p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = NAVY
     p.space_after = Pt(8)
     pts2 = [
-        "High-Impedance Faults (HIF): Conductor contact with dry soil or vegetation restricts fault current, mimicking normal load flow.",
-        "Double-Line-to-Ground (LLG): High tower footing resistance attenuates ground current (I₀ → 0), causing LLG to mimic LL faults.",
-        "Conventional Distance Relays: Suffer under-reach from arc resistance and false trips during power swings.",
-        "ML Advantage: Multi-sensor features capture holistic network state without pre-set impedance reach thresholds."
+        "Hyperplane Function: Evaluates the optimal maximum-margin boundary:",
+        "f(z) = sign(wᵀ z + b)",
+        "One-vs-One (OvO) Voting: Evaluates 6 pairwise binary classifiers across the 4 classes (2psc, 3psc, no fault, spgf).",
+        "Probability Calibration: Platt scaling computes posterior probabilities (e.g. 98.3% - 99.9% confidence).",
+        "Physical Boundary: Separates balanced zero-sequence (spgf), negative-sequence (2psc), and symmetric sag (3psc)."
     ]
-    for b in pts2:
+    for idx, b in enumerate(pts2):
         p = t2.add_paragraph()
-        p.text = "• " + b
-        p.font.name = "Calibri"
-        p.font.size = Pt(10.5)
-        p.font.color.rgb = TEXT_DARK
-        p.space_after = Pt(5)
+        if idx == 1:
+            p.text = b
+            p.font.name = "Consolas"
+            p.font.size = Pt(11)
+            p.font.bold = True
+            p.font.color.rgb = RGBColor(15, 76, 129)
+        else:
+            p.text = "• " + b
+            p.font.name = "Calibri"
+            p.font.size = Pt(10.5)
+            p.font.color.rgb = TEXT_DARK
+        p.space_after = Pt(4)
 
-    # Col 3: Real-Time Protection Benchmark
-    c3 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8) + 2*(col_w + col_gap), Inches(1.5), col_w, Inches(5.4))
+    # Col 3: Step 3 - Digital Relay Trip Decision
+    c3 = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8) + 2*(col_w + col_gap), Inches(1.5), col_w, Inches(4.3))
     c3.fill.solid()
     c3.fill.fore_color.rgb = CARD_BG
     c3.line.color.rgb = BORDER_COLOR
-    tb_c3 = s6.shapes.add_textbox(Inches(0.95) + 2*(col_w + col_gap), Inches(1.65), col_w - Inches(0.3), Inches(5.1))
+    tb_c3 = s6.shapes.add_textbox(Inches(0.95) + 2*(col_w + col_gap), Inches(1.65), col_w - Inches(0.3), Inches(4.0))
     t3 = tb_c3.text_frame
     t3.word_wrap = True
     p = t3.paragraphs[0]
-    p.text = "3. Real-Time Protection Claim"
+    p.text = "3. Relay Action Logic"
     p.font.name = "Calibri"
     p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = NAVY
     p.space_after = Pt(8)
     pts3 = [
-        "Sub-Cycle Execution Speed: Average inference latency measured at 0.302 ms (302 microseconds) across 1,000 runs.",
-        "Power Cycle Comparison: In a 50 Hz power system (1 cycle = 20.0 ms), inference consumes only 1.51% of one cycle.",
-        "Relay Speed Margin: Over 98% of the power cycle remains available for DFT phasor filtering and breaker contact travel.",
-        "Conclusion: The prototype module meets strict industrial utility protection standards for sub-cycle tripping and selective auto-reclosing."
+        "Decision Rule Mapping:",
+        "'no fault': Maintain CLOSED breakers (power transfer continues uninterrupted).",
+        "'spgf': Issue SINGLE-POLE TRIP on faulted phase only; auto-reclose preserves grid synchronism on 2 healthy phases.",
+        "'2psc' / '3psc': Issue THREE-POLE TRIP & LOCKOUT immediately to isolate high-energy multiphase short circuits."
     ]
     for b in pts3:
         p = t3.add_paragraph()
@@ -416,7 +431,31 @@ def create_deck():
         p.font.name = "Calibri"
         p.font.size = Pt(10.5)
         p.font.color.rgb = TEXT_DARK
-        p.space_after = Pt(5)
+        p.space_after = Pt(4)
+
+    # Bottom Full-Width Banner: Execution Speed & Protection Feasibility
+    bot_bar = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(6.0), Inches(11.733), Inches(1.1))
+    bot_bar.fill.solid()
+    bot_bar.fill.fore_color.rgb = RGBColor(232, 245, 233) # light green
+    bot_bar.line.color.rgb = RGBColor(76, 175, 80)
+    tb_bb = s6.shapes.add_textbox(Inches(1.0), Inches(6.05), Inches(11.333), Inches(1.0))
+    tfbb = tb_bb.text_frame
+    tfbb.word_wrap = True
+
+    p_bb = tfbb.paragraphs[0]
+    p_bb.text = "Sub-Cycle Real-Time Protection Benchmark:"
+    p_bb.font.name = "Calibri"
+    p_bb.font.size = Pt(12)
+    p_bb.font.bold = True
+    p_bb.font.color.rgb = RGBColor(27, 94, 32)
+    p_bb.space_after = Pt(2)
+
+    p_bb2 = tfbb.add_paragraph()
+    p_bb2.text = "• Measured Inference Speed: 0.302 ms (302 μs) per prediction across 1,000 runs.\n" \
+                 "• In a 50 Hz power system (1 cycle = 20.0 ms), inference consumes only 1.51% of one power cycle, leaving > 98% of the cycle for DFT phasor calculation and physical breaker trip travel."
+    p_bb2.font.name = "Calibri"
+    p_bb2.font.size = Pt(10.5)
+    p_bb2.font.color.rgb = TEXT_DARK
 
     # Save
     out_ppt = "ESA_Project15_Fault_Classification_Presentation.pptx"
