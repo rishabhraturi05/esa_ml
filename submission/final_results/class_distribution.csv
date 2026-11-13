@@ -1,0 +1,6 @@
+Class,Description,Raw_Count,Clean_Count,Percentage,Train_70%,Val_15%,Test_15%
+no fault,Balanced Steady-State Load Flow,303,230,42.2%,161,35,34
+3psc,Three-Phase Symmetrical Short Circuit,105,105,19.3%,73,16,16
+2psc,Line-to-Line Asymmetrical Short Circuit,105,105,19.3%,74,15,16
+spgf,Single Phase-to-Ground Asymmetrical Fault,105,105,19.3%,73,16,16
+Total,Complete High-Voltage Sensor Library,618,545,100.0%,381,82,82

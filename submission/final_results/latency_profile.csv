@@ -1,0 +1,5 @@
+Protection_Stage,Execution_Time_ms,Percent_of_50Hz_Cycle,Status
+SVM Feature Scaling & Inference,0.82,4.1%,Verified Sub-Cycle Feasible
+Anti-Aliasing & Phasor Estimation,3.00 - 5.00,15.0% - 25.0%,Standard Relay Filtering Window
+Relay Logic & Breaker Trip Signal,1.00 - 2.00,5.0% - 10.0%,Microprocessor Output Register
+Total Clearing Time (Algorithmic),6.82,34.1%,Sub-Cycle Target Met (< 10 ms)

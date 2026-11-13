@@ -1,0 +1,7 @@
+Kernel,Regularization_C,Gamma,CV_Macro_F1,Status
+Linear,0.01,N/A,0.9921 ± 0.008,Rejected (Slight Under-fitting)
+Linear,0.1,N/A,1.0000 ± 0.000,OPTIMAL (Selected Architecture)
+Linear,1.0,N/A,1.0000 ± 0.000,Sub-optimal (Higher Complexity)
+Linear,10.0,N/A,1.0000 ± 0.000,Sub-optimal (Higher Complexity)
+RBF,1.0,scale (0.0417),1.0000 ± 0.000,Alternative (Non-linear)
+RBF,10.0,scale (0.0417),1.0000 ± 0.000,Alternative (Non-linear)

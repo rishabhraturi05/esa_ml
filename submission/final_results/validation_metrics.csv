@@ -1,0 +1,6 @@
+Operational_Regime,Precision,Recall,F1_Score,Validation_Support
+2psc (Line-to-Line),1.0,1.0,1.0,15
+3psc (Three-Phase),1.0,1.0,1.0,16
+no fault (Normal),1.0,1.0,1.0,35
+spgf (Phase-to-Ground),1.0,1.0,1.0,16
+Macro Average / Total,1.0,1.0,1.0,82

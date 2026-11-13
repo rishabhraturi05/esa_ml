@@ -1,0 +1,4 @@
+Classifier_Architecture,CV_Macro_F1,Val_Accuracy,Test_Accuracy,Test_Macro_F1,Model_Complexity
+Proposed Linear SVM (C=0.1),1.0000,100.0%,100.0%,1.0000,Ultra-Compact (10.2 KB)
+Random Forest (100 Trees),1.0000,100.0%,100.0%,1.0000,High Memory (> 150 KB)
+K-Nearest Neighbors (K=5),1.0000,100.0%,100.0%,1.0000,Memory Bound by Dataset
